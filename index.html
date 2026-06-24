@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Estimate your roof insurance deductible, depreciation, and out-of-pocket costs for a Texas roof replacement claim.">
+  <title>Texas Roof Insurance Out-of-Pocket Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Libre+Baskerville:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#calc-form">Skip to calculator</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <span class="brand-icon" aria-hidden="true">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M4 14L16 4l12 10v12a2 2 0 01-2 2H6a2 2 0 01-2-2V14z" stroke="currentColor" stroke-width="2"/><path d="M12 28V18h8v10" stroke="currentColor" stroke-width="2"/></svg>
+        </span>
+        <div>
+          <h1 id="brand-name">Texas Roof Insurance Calculator</h1>
+          <p id="brand-tagline">Understand your deductible, depreciation, and out-of-pocket costs</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container main-layout">
+    <section class="intro-card" aria-labelledby="intro-heading">
+      <h2 id="intro-heading" class="visually-hidden">About this calculator</h2>
+      <p class="intro-text">
+        Use this tool to estimate how a roof insurance claim may be structured — including your deductible,
+        initial payment, recoverable depreciation, and what you may still owe your contractor.
+      </p>
+      <div class="demo-bar">
+        <label for="demo-select">Try demo scenario</label>
+        <div class="demo-controls">
+          <select id="demo-select" name="demo-select"></select>
+          <button type="button" id="btn-load-demo" class="btn btn-secondary" data-label="loadDemo">Load demo data</button>
+        </div>
+      </div>
+    </section>
+
+    <div id="warnings" class="warnings" hidden role="status" aria-live="polite"></div>
+
+    <form id="calc-form" class="calc-form" novalidate>
+      <!-- Claim basics -->
+      <fieldset class="form-section">
+        <legend>Claim basics</legend>
+        <div class="field-grid">
+          <div class="field">
+            <label for="replacementCost" data-label="replacementCost">Insurance-approved replacement cost (RCV)</label>
+            <div class="input-prefix">
+              <span aria-hidden="true">$</span>
+              <input type="text" inputmode="decimal" id="replacementCost" name="replacementCost" placeholder="28,000" required autocomplete="off">
+            </div>
+            <p class="field-help" data-help="replacementCost"></p>
+          </div>
+
+          <div class="field">
+            <span class="field-label" data-label="settlementType">Policy settlement type</span>
+            <div class="radio-group" role="radiogroup" aria-label="Policy settlement type">
+              <label class="radio-card">
+                <input type="radio" name="settlementType" value="rcv" checked>
+                <span data-label="settlementRcv">Replacement cost value (RCV)</span>
+              </label>
+              <label class="radio-card">
+                <input type="radio" name="settlementType" value="acv">
+                <span data-label="settlementAcv">Actual cash value (ACV)</span>
+              </label>
+              <label class="radio-card">
+                <input type="radio" name="settlementType" value="unsure">
+                <span data-label="settlementUnsure">Unsure — show both scenarios</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Deductible -->
+      <fieldset class="form-section">
+        <legend>Deductible</legend>
+        <div class="field-grid">
+          <div class="field field-full">
+            <span class="field-label" data-label="deductibleType">Deductible type</span>
+            <div class="radio-group radio-group--inline" role="radiogroup">
+              <label class="radio-pill">
+                <input type="radio" name="deductibleType" value="flat">
+                <span data-label="deductibleFlat">Flat-dollar deductible</span>
+              </label>
+              <label class="radio-pill">
+                <input type="radio" name="deductibleType" value="percent" checked>
+                <span data-label="deductibleTypePercent">Percentage deductible</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="field" id="group-flat-deductible" hidden>
+            <label for="flatDeductible" data-label="flatDeductible">Flat deductible amount</label>
+            <div class="input-prefix">
+              <span aria-hidden="true">$</span>
+              <input type="text" inputmode="decimal" id="flatDeductible" name="flatDeductible" placeholder="2,500" autocomplete="off">
+            </div>
+          </div>
+
+          <div class="field" id="group-coverage-a">
+            <label for="coverageA" data-label="coverageA">Dwelling coverage (Coverage A)</label>
+            <div class="input-prefix">
+              <span aria-hidden="true">$</span>
+              <input type="text" inputmode="decimal" id="coverageA" name="coverageA" placeholder="450,000" autocomplete="off">
+            </div>
+          </div>
+
+          <div class="field" id="group-percent-deductible">
+            <label for="deductiblePercent" data-label="deductiblePercent">Deductible percentage</label>
+            <div class="input-suffix">
+              <input type="text" inputmode="decimal" id="deductiblePercent" name="deductiblePercent" placeholder="1" autocomplete="off">
+              <span aria-hidden="true">%</span>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Depreciation -->
+      <fieldset class="form-section">
+        <legend>Depreciation</legend>
+        <div class="field-grid field-grid--three">
+          <div class="field">
+            <label for="totalDepreciation" data-label="totalDepreciation">Total depreciation</label>
+            <div class="input-prefix">
+              <span aria-hidden="true">$</span>
+              <input type="text" inputmode="decimal" id="totalDepreciation" name="totalDepreciation" placeholder="8,400" autocomplete="off">
+            </div>
+          </div>
+          <div class="field">
+            <label for="recoverableDepreciation" data-label="recoverableDepreciation">Recoverable depreciation</label>
+            <div class="input-prefix">
+              <span aria-hidden="true">$</span>
+              <input type="text" inputmode="decimal" id="recoverableDepreciation" name="recoverableDepreciation" placeholder="5,600" autocomplete="off">
+            </div>
+          </div>
+          <div class="field">
+            <label for="nonrecoverableDepreciation" data-label="nonrecoverableDepreciation">Nonrecoverable depreciation</label>
+            <div class="input-prefix">
+              <span aria-hidden="true">$</span>
+              <input type="text" inputmode="decimal" id="nonrecoverableDepreciation" name="nonrecoverableDepreciation" placeholder="2,800" autocomplete="off">
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Contractor & extras -->
+      <fieldset class="form-section">
+        <legend>Contractor &amp; additional costs</legend>
+        <div class="field-grid field-grid--two">
+          <div class="field">
+            <label for="contractorPrice" data-label="contractorPrice">Contractor price</label>
+            <div class="input-prefix">
+              <span aria-hidden="true">$</span>
+              <input type="text" inputmode="decimal" id="contractorPrice" name="contractorPrice" placeholder="29,500" required autocomplete="off">
+            </div>
+          </div>
+          <div class="field">
+            <label for="optionalUpgrades" data-label="optionalUpgrades">Optional upgrades</label>
+            <div class="input-prefix">
+              <span aria-hidden="true">$</span>
+              <input type="text" inputmode="decimal" id="optionalUpgrades" name="optionalUpgrades" placeholder="0" value="0" autocomplete="off">
+            </div>
+          </div>
+          <div class="field">
+            <label for="uncoveredWork" data-label="uncoveredWork">Uncovered / non-covered items</label>
+            <div class="input-prefix">
+              <span aria-hidden="true">$</span>
+              <input type="text" inputmode="decimal" id="uncoveredWork" name="uncoveredWork" placeholder="0" value="0" autocomplete="off">
+            </div>
+          </div>
+          <div class="field">
+            <label for="paymentsReceived" data-label="paymentsReceived">Insurance payments already received</label>
+            <div class="input-prefix">
+              <span aria-hidden="true">$</span>
+              <input type="text" inputmode="decimal" id="paymentsReceived" name="paymentsReceived" placeholder="0" value="0" autocomplete="off">
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" data-label="calculate">Calculate my estimate</button>
+        <button type="reset" class="btn btn-ghost" data-label="reset">Reset</button>
+      </div>
+    </form>
+
+    <section id="results" class="results" hidden aria-live="polite"></section>
+
+    <footer class="disclaimer-footer">
+      <h2>Disclaimer</h2>
+      <ul id="disclaimers"></ul>
+    </footer>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/demo-data.js"></script>
+  <script src="js/calculator.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // Apply help text from config after DOM ready
+    document.querySelectorAll('[data-help]').forEach(el => {
+      const key = el.dataset.help;
+      if (CALC_CONFIG.helpText[key]) el.textContent = CALC_CONFIG.helpText[key];
+    });
+  </script>
+</body>
+</html>
